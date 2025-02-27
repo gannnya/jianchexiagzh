@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>检车侠官网</title>
+    <!-- 引入 vant 样式 -->
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/vant@4/lib/index.css" />
+    <style>
+        /* 禁止选择文本 */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 允许输入框选择文本 */
+        input,
+        textarea {
+            -webkit-user-select: auto;
+            -khtml-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
+
+        body {
+            overscroll-behavior: none;
+            /* 禁止下拉刷新 */
+            touch-action: manipulation;
+            /* 优化触摸操作 */
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        .service-card {
+            margin: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .service-content {
+            padding: 16px;
+        }
+
+        .article-item {
+            background: white;
+            margin: 0;
+            padding: 16px 12px;
+            border-bottom: 1px solid #ebedf0;
+        }
+
+        .article-item:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            padding: 16px 12px 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #323233;
+            background: white;
+            border-bottom: 1px solid #ebedf0;
+        }
+
+        .article-title {
+            font-size: 14px;
+            color: #323233;
+            margin-bottom: 4px;
+        }
+
+        .article-desc {
+            font-size: 12px;
+            color: #969799;
+        }
+
+        .services-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            gap: 12px;
+            background: white;
+        }
+
+        .service-box {
+            flex: 1;
+            min-width: 0;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-right: none;
+        }
+
+        .service-box:last-child {
+            border-right: none;
+        }
+
+        .service-name {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #323233;
+        }
+
+        .van-icon {
+            font-size: 24px;
+            color: #1989fa;
+        }
+
+        @media screen and (max-width: 768px) {
+            .services-container {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .service-box {
+                padding: 16px 8px;
+            }
+
+            .service-name {
+                font-size: 12px;
+                margin-top: 6px;
+            }
+
+            .van-icon {
+                font-size: 20px;
+            }
+        }
+
+        @media screen and (min-width: 769px) {
+
+            .services-container,
+            .company-intro,
+            .article-list,
+            .section-title {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+
+        /* 客服按钮样式 */
+        .customer-service {
+            position: fixed;
+            right: 16px;
+            bottom: 80px;
+            background: #1989fa;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            z-index: 99;
+        }
+
+        .customer-service:active {
+            opacity: 0.8;
+        }
+
+        .customer-service .van-icon {
+            font-size: 20px;
+            color: white;
+        }
+
+        /* 客服弹窗样式 */
+        .customer-service-popup {
+            padding: 24px 16px;
+            text-align: center;
+        }
+
+        .customer-service-popup h3 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            color: #323233;
+        }
+
+        .customer-service-popup .qrcode {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .customer-service-popup p {
+            margin: 16px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .phone-number {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #ebedf0;
+        }
+
+        .phone-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #1989fa;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .phone-link:active {
+            opacity: 0.8;
+        }
+
+        .phone-link .van-icon {
+            font-size: 20px;
+            color: #1989fa;
+        }
+
+        @media screen and (max-width: 768px) {
+            .customer-service {
+                right: 12px;
+                bottom: 60px;
+                padding: 6px 12px;
+            }
+
+            .customer-service .van-icon {
+                font-size: 16px;
+            }
+
+            .customer-service span {
+                font-size: 12px;
+            }
+        }
+
+        .van-swipe-item {
+            cursor: pointer;
+        }
+
+        .van-swipe-item:active {
+            opacity: 0.9;
+        }
+
+        .company-intro {
+            margin: 0;
+            background: white;
+            padding: 0 12px;
+        }
+
+        .intro-content {
+            padding: 16px;
+        }
+
+        .intro-content h4 {
+            margin: 0 0 12px;
+            font-size: 16px;
+            color: #323233;
+        }
+
+        .intro-content p {
+            margin: 0 0 16px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .intro-features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ebedf0;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-item .van-icon {
+            font-size: 24px;
+            color: #1989fa;
+        }
+
+        .feature-item span {
+            font-size: 14px;
+            color: #323233;
+        }
+
+        @media screen and (max-width: 768px) {
+            .intro-content {
+                padding: 12px;
+            }
+
+            .intro-content h4 {
+                font-size: 15px;
+            }
+
+            .intro-content p {
+                font-size: 13px;
+            }
+
+            .feature-item .van-icon {
+                font-size: 20px;
+            }
+
+            .feature-item span {
+                font-size: 12px;
+            }
+        }
+
+        .intro-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .intro-text h5 {
+            color: #323233;
+            font-size: 15px;
+            margin: 16px 0 8px;
+        }
+
+        .intro-text p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .intro-text ul {
+            margin: 8px 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .intro-text li {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .intro-text h5 {
+                font-size: 14px;
+            }
+
+            .intro-text p,
+            .intro-text li {
+                font-size: 13px;
+            }
+        }
+
+        /* 添加分区间隔 */
+        .section-gap {
+            height: 8px;
+            background: #f7f8fa;
+        }
+
+        .service-detail {
+            padding: 16px;
+        }
+
+        .service-detail h4 {
+            margin: 0 0 16px;
+            color: #323233;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .service-detail .service-item {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f7f8fa;
+            border-radius: 8px;
+        }
+
+        .service-detail .service-item p {
+            margin: 0 0 12px;
+            color: #323233;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .service-detail .service-item ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .service-detail .service-item li {
+            margin: 4px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media screen and (max-width: 768px) {
+            .service-detail {
+                padding: 12px;
+            }
+
+            .service-detail h4 {
+                font-size: 15px;
+            }
+
+            .service-detail .service-item {
+                padding: 12px;
+                margin-bottom: 16px;
+            }
+
+            .service-detail .service-item p {
+                font-size: 14px;
+            }
+
+            .service-detail .service-item li {
+                font-size: 13px;
+            }
+        }
+
+        /* 修改轮播图高度 */
+        .my-swipe img {
+            width: 100%;
+            height: 150px;
+            /* 从 200px 改为 150px */
+            object-fit: cover;
+        }
+
+        @media screen and (max-width: 768px) {
+            .my-swipe img {
+                height: 120px;
+                /* 移动端更小一些 */
+            }
+        }
+
+        .service-detail .service-desc {
+            margin: 8px 0 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .service-detail .service-item ul li strong {
+            color: #323233;
+            font-weight: bold;
+        }
+
+        /* 修改服务图标样式 */
+        .service-box img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 4px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .service-box img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        /* 页头样式 */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .header .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-phone {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #1989fa;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .header-phone .van-icon {
+            font-size: 16px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header {
+                padding: 8px 12px;
+            }
+
+            .header .logo {
+                height: 24px;
+            }
+
+            .header-phone {
+                font-size: 12px;
+            }
+
+            .header-phone .van-icon {
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (min-width: 769px) {
+            .header {
+                padding: 12px 0;
+            }
+
+            .header>div {
+                max-width: 1200px;
+                margin: 0 auto;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        /* 折叠内容样式 */
+        .collapse-content {
+            max-height: 100px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapse-content.expanded {
+            max-height: 2000px;
+        }
+
+        .collapse-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 8px;
+            color: #1989fa;
+            cursor: pointer;
+            background: linear-gradient(to bottom, transparent, white 20%);
+            position: relative;
+        }
+
+        .collapse-toggle:active {
+            opacity: 0.8;
+        }
+
+        .collapse-toggle .van-icon {
+            font-size: 14px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .collapse-toggle {
+                margin-top: 8px;
+                padding: 6px;
+            }
+        }
+    </style>
+    <script>
+        // 禁止双指缩放
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        // 禁止双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, { passive: false });
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 页头 -->
+        <div class="header">
+            <img src="./images/资源 5.png" alt="检车侠" class="logo">
+            <div class="header-right">
+                <a @click.prevent="makePhoneCall" class="header-phone">
+                    <van-icon name="phone" />
+                    <span>（0579）81333333</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 轮播图 -->
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+            <van-swipe-item @click="showCustomerService = true">
+                <img src="./images/绿色简约扁平风假期旅游保险产品宣传微信公众号封面.png" alt="检车侠服务展示图1"
+                    style="width: 100%; height: 150px; object-fit: cover;">
+            </van-swipe-item>
+            <van-swipe-item @click="showCustomerService = true">
+                <img src="./images/蓝色3D风实时热点头条速递微信公众号封面.png" alt="检车侠服务展示图2"
+                    style="width: 100%; height: 150px; object-fit: cover;">
+            </van-swipe-item>
+        </van-swipe>
+
+        <div class="section-gap"></div>
+
+        <!-- 服务列表 -->
+        <div class="section-title">我们的服务</div>
+        <div class="services-container">
+            <div class="service-box" @click="showService('new')">
+                <img src="./images/新车复制.png" alt="新车检测">
+                <div class="service-name">新车检测</div>
+            </div>
+            <div class="service-box" @click="showService('used')">
+                <img src="./images/数字2-绿.png" alt="二手车检测">
+                <div class="service-name">二手车检测</div>
+            </div>
+            <div class="service-box" @click="showService('legal')">
+                <img src="./images/天秤座.png" alt="司法鉴定">
+                <div class="service-name">司法鉴定</div>
+            </div>
+        </div>
+
+        <div class="section-gap"></div>
+
+        <!-- 公司介绍 -->
+        <div class="section-title">公司介绍</div>
+        <div class="company-intro">
+            <div class="intro-content">
+                <h4>检车侠® - 广福（金华）机动车鉴定评估有限公司</h4>
+                <div class="intro-text">
+                    <p>检车侠®为广福（金华）机动车鉴定评估有限公司注册商标，公司经国家商务部正式备案，工商行政管理局注册登记，具备机动车鉴定评估专业资质的鉴定评估机构。</p>
+
+                    <div class="collapse-content" :class="{ 'expanded': showFullIntro }">
+                        <h5>专业团队</h5>
+                        <p>公司从业人员资质完备，具有：</p>
+                        <ul>
+                            <li>高级鉴定评估师近百名</li>
+                            <li>车辆痕迹检验鉴定工程师70名</li>
+                            <li>汽车高级维修检验工数名</li>
+                            <li>检验检测设备齐全</li>
+                        </ul>
+
+                        <h5>业务范围</h5>
+                        <p>公司主要从事：</p>
+                        <ul>
+                            <li>机动车检测（二手车/新车检测）</li>
+                            <li>车辆技术状况鉴定</li>
+                            <li>事故车贬值鉴定</li>
+                            <li>车辆行驶速度鉴定</li>
+                            <li>车辆形态、属性、VIN码鉴定</li>
+                            <li>司法鉴定等服务</li>
+                        </ul>
+
+                        <h5>专业保障</h5>
+                        <p>公司严格按照五项程序组织实施鉴定评估，所出具的各类报告书具有法律效力并为国家认可。目前已在最高院、浙江省高级人民法院入围备案！</p>
+
+                        <h5>服务承诺</h5>
+                        <p>在执业过程中，我们将依照相关的法律、法规，严格遵循"客观、真实、公正、公平、自愿"的原则，竭诚为您提供专业、权威的机动车鉴定评估服务。</p>
+                    </div>
+
+                    <div class="collapse-toggle" @click="showFullIntro = !showFullIntro">
+                        <span>{{ showFullIntro ? '收起' : '展开全部' }}</span>
+                        <van-icon :name="showFullIntro ? 'arrow-up' : 'arrow-down'" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-gap"></div>
+
+        <!-- 文章资讯 -->
+        <div class="section-title">热门资讯</div>
+        <div class="article-list">
+            <div class="article-item" v-for="article in articles" @click="showArticle(article)">
+                <div class="article-title">{{ article.title }}</div>
+                <div class="article-desc">{{ article.description }}</div>
+            </div>
+        </div>
+
+        <!-- 客服按钮 -->
+        <div class="customer-service" @click="showCustomerService = true">
+            <van-icon name="service-o" />
+            <span>联系客服</span>
+        </div>
+
+        <!-- 客服二维码弹出层 -->
+        <van-popup v-model:show="showCustomerService" round closeable position="center"
+            :style="{ width: '80%', maxWidth: '300px' }">
+            <div class="customer-service-popup">
+                <h3>联系客服</h3>
+                <img src="./images/80d5e0a9b4c2554bd76bf2660d21d52.png" alt="客服二维码" class="qrcode">
+                <p>截图保存 微信扫码</p>
+                <div class="phone-number">
+                    <a @click.prevent="makePhoneCall" class="phone-link">
+                        <van-icon name="phone-o" />
+                        <span>（0579）81333333</span>
+                    </a>
+                </div>
+            </div>
+        </van-popup>
+
+        <!-- 服务详情弹出层 -->
+        <van-popup v-model:show="showServiceDetail" round position="bottom" :style="{ height: '80%' }">
+            <div style="padding: 20px;">
+                <h3>{{ currentService.title }}</h3>
+                <div v-html="currentService.content"></div>
+            </div>
+        </van-popup>
+
+        <!-- 文章详情弹出层 -->
+        <van-popup v-model:show="showArticleDetail" round position="bottom" :style="{ height: '80%' }">
+            <div style="padding: 20px;">
+                <h3>{{ currentArticle.title }}</h3>
+                <div v-html="currentArticle.content"></div>
+            </div>
+        </van-popup>
+    </div>
+
+    <!-- 引入微信 JS-SDK -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <!-- 引入 Vue 和 Vant -->
+    <script src="https://fastly.jsdelivr.net/npm/vue@3"></script>
+    <script src="https://fastly.jsdelivr.net/npm/vant@4/lib/vant.min.js"></script>
+    <script>
+        const { createApp } = Vue;
+        const app = createApp({
+            data() {
+                return {
+                    showServiceDetail: false,
+                    showArticleDetail: false,
+                    currentService: {},
+                    currentArticle: {},
+                    services: {
+                        new: {
+                            title: '新车检测服务',
+                            content: `
+                                <div class="service-detail">
+                                    <h4>全面检测项目（265项）</h4>
+                                    <div class="service-item">
+                                        <p>基础检测项目</p>
+                                        <ul>
+                                            <li>手续核查（7项）</li>
+                                            <li>外观检测（50项）</li>
+                                            <li>内饰检测（52项）</li>
+                                            <li>唯一性检测（7项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>系统检测</p>
+                                        <ul>
+                                            <li>ECU电脑检测（13项）</li>
+                                            <li>底盘检测（62项）</li>
+                                            <li>安全系统检测（22项）</li>
+                                            <li>行驶性能检测（7项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>功能检测</p>
+                                        <ul>
+                                            <li>驾驶舱检查（15项）</li>
+                                            <li>电器内部功能（9项）</li>
+                                            <li>外部照明功能（14项）</li>
+                                            <li>转向功能（4项）</li>
+                                            <li>制动功能（3项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>主要检测内容</p>
+                                        <ul>
+                                            <li>车辆外观检测</li>
+                                            <li>车辆内饰检测</li>
+                                            <li>发动机舱内检测</li>
+                                            <li>电器系统检测</li>
+                                            <li>底盘检测</li>
+                                            <li>发动机变速箱系统检测</li>
+                                            <li>制动系统检测</li>
+                                            <li>行驶系统检测</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        used: {
+                            title: '二手车检测服务',
+                            content: `
+                                <div class="service-detail">
+                                    <h4>全面检测项目（554项）</h4>
+                                    <div class="service-item">
+                                        <p>基础检测项目</p>
+                                        <ul>
+                                            <li>手续核查（7项）</li>
+                                            <li>事故检测（87项）</li>
+                                            <li>泡水检测（92项）</li>
+                                            <li>火烧检测（58项）</li>
+                                            <li>调表检测（20项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>外观与内饰</p>
+                                        <ul>
+                                            <li>外观检测（50项）</li>
+                                            <li>内饰检测（52项）</li>
+                                            <li>唯一性检测（7项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>核心系统</p>
+                                        <ul>
+                                            <li>ECU电脑检测（13项）</li>
+                                            <li>底盘检测（62项）</li>
+                                            <li>安全系统检测（22项）</li>
+                                            <li>行驶性能检测（7项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>功能检测</p>
+                                        <ul>
+                                            <li>驾驶舱检查（15项）</li>
+                                            <li>电器内部功能（9项）</li>
+                                            <li>外部照明功能（14项）</li>
+                                            <li>转向功能（4项）</li>
+                                            <li>制动功能（3项）</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>记录查询</p>
+                                        <ul>
+                                            <li>4S店维修保养记录</li>
+                                            <li>车辆出险理赔记录</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>可附加项目：发动机变速箱深度检测</p>
+                                        <ul>
+                                            <li>发动机缸体内部积碳状态检查</li>
+                                            <li>发动机缸体内壁磨损、拉伤、烧机油、进水情况</li>
+                                            <li>发动机变速箱工作状况、磨损程度、使用寿命判断</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        legal: {
+                            title: '司法鉴定服务',
+                            content: `
+                                <div class="service-detail">
+                                    <h4>机动车司法鉴定（维权诉前司法鉴定）</h4>
+                                    <div class="service-item">
+                                        <p>鉴定项目</p>
+                                        <ul>
+                                            <li>重大事故车鉴定</li>
+                                            <li>泡水车鉴定</li>
+                                            <li>调表车鉴定</li>
+                                            <li>新车二次维修喷漆鉴定</li>
+                                            <li>车辆唯一性鉴定</li>
+                                            <li>事故因果关系鉴定</li>
+                                            <li>车辆零部件（品质/真假）鉴定</li>
+                                            <li>发动机损坏原因鉴定</li>
+                                            <li>车辆起火原因鉴定</li>
+                                            <li>其他车辆技术鉴定</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>评估项目</p>
+                                        <ul>
+                                            <li>车辆贬值评估</li>
+                                            <li>车辆价值评估</li>
+                                            <li>车辆事故损失评估</li>
+                                            <li>停运损失评估</li>
+                                            <li>其他车辆评估</li>
+                                        </ul>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>什么是诉前鉴定？</p>
+                                        <p class="service-desc">诉前鉴定是指当事人在提起诉讼的同时或在诉前调解过程中向人民法院申请，经人民法院审查认为待证事实需要鉴定意见证明，由人民法院依照相关程序，委托专业机构进行鉴定的司法活动。</p>
+                                    </div>
+                                    <div class="service-item">
+                                        <p>诉前鉴定的优点</p>
+                                        <ul>
+                                            <li><strong>加快解纷进程：</strong>通过诉前鉴定，有助于当事人预判诉讼风险，提出更合理的诉讼请求。加快诉前及诉中工作进程，提高调解成功率。</li>
+                                            <li><strong>降低诉讼成本：</strong>在诉前阶段当事人无需交纳诉讼费即可将案件转入鉴定环节，若鉴定后双方在诉前达成调解可免去诉讼费，降低当事人诉讼成本。</li>
+                                            <li><strong>提高审判效率：</strong>对于诉前调解不成转入诉讼的案件，可以根据鉴定意见提高案件的繁简分流质量，也可以为后续案件的精准审理奠定基础，缩短审理周期，节约审判资源。</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    },
+                    articles: [
+                        {
+                            title: '如何选购新车？专业建议助您做出明智选择',
+                            description: '新车选购技巧和注意事项',
+                            content: `
+                                <h4>如何选购新车？专业建议助您做出明智选择</h4>
+                                <p>选购新车是一项重要决定，以下是一些专业建议：</p>
+                                <h5>1. 预算规划</h5>
+                                <ul>
+                                    <li>确定总预算范围</li>
+                                    <li>考虑后期维护成本</li>
+                                    <li>了解保险费用</li>
+                                </ul>
+                                <h5>2. 需求分析</h5>
+                                <ul>
+                                    <li>日常使用场景</li>
+                                    <li>载客及载物需求</li>
+                                    <li>驾驶习惯考虑</li>
+                                </ul>
+                                <h5>3. 车型对比</h5>
+                                <p>详细对比不同品牌和车型的优缺点，包括：</p>
+                                <ul>
+                                    <li>性能参数</li>
+                                    <li>安全配置</li>
+                                    <li>油耗水平</li>
+                                    <li>售后服务</li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: '二手车交易陷阱大揭秘',
+                            description: '教您如何避免二手车交易中的常见陷阱',
+                            content: `
+                                <h4>二手车交易陷阱大揭秘</h4>
+                                <p>在二手车交易中，常见的陷阱包括：</p>
+                                <h5>1. 车况造假</h5>
+                                <ul>
+                                    <li>里程表调改</li>
+                                    <li>事故车翻新</li>
+                                    <li>维修记录造假</li>
+                                </ul>
+                                <h5>2. 价格陷阱</h5>
+                                <ul>
+                                    <li>虚假低价诱导</li>
+                                    <li>隐藏费用</li>
+                                    <li>过度夸大车况</li>
+                                </ul>
+                                <h5>3. 防范建议</h5>
+                                <ul>
+                                    <li>请专业机构检测</li>
+                                    <li>核实车辆信息</li>
+                                    <li>警惕低价诱惑</li>
+                                    <li>签订正规合同</li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: '车辆保养小知识',
+                            description: '日常车辆保养技巧分享',
+                            content: `
+                                <h4>车辆保养小知识</h4>
+                                <p>正确的保养可以延长车辆使用寿命：</p>
+                                <h5>1. 日常检查</h5>
+                                <ul>
+                                    <li>轮胎气压</li>
+                                    <li>机油液位</li>
+                                    <li>冷却液</li>
+                                    <li>制动液</li>
+                                </ul>
+                                <h5>2. 定期保养</h5>
+                                <ul>
+                                    <li>按时更换机油</li>
+                                    <li>检查制动系统</li>
+                                    <li>更换空气滤芯</li>
+                                    <li>检查传动系统</li>
+                                </ul>
+                                <h5>3. 使用建议</h5>
+                                <ul>
+                                    <li>避免急加速急刹车</li>
+                                    <li>定期清洗车辆</li>
+                                    <li>及时处理故障</li>
+                                </ul>
+                            `
+                        }
+                    ],
+                    showCustomerService: false,
+                    showFullIntro: false
+                }
+            },
+            methods: {
+                showService(type) {
+                    this.currentService = this.services[type];
+                    this.showServiceDetail = true;
+                },
+                showArticle(article) {
+                    this.currentArticle = article;
+                    this.showArticleDetail = true;
+                },
+                // 添加拨号方法
+                makePhoneCall() {
+                    // 判断是否在微信环境中
+                    if (this.isWechat()) {
+                        // 使用微信 JS-SDK 拨打电话
+                        wx.ready(() => {
+                            wx.invoke('makePhoneCall', {
+                                phoneNumber: '057981333333'
+                            });
+                        });
+                    } else {
+                        // 非微信环境使用默认拨号
+                        window.location.href = 'tel:057981333333';
+                    }
+                },
+                // 判断是否在微信环境
+                isWechat() {
+                    return /MicroMessenger/i.test(navigator.userAgent);
+                }
+            },
+            mounted() {
+                if (this.isWechat()) {
+                    // 从后端获取配置信息
+                    fetch('/api/wx/jsconfig?url=' + encodeURIComponent(window.location.href))
+                        .then(res => res.json())
+                        .then(config => {
+                            wx.config({
+                                debug: false,
+                                appId: config.appId,
+                                timestamp: config.timestamp,
+                                nonceStr: config.nonceStr,
+                                signature: config.signature,
+                                jsApiList: ['makePhoneCall']
+                            });
+                        });
+                }
+            }
+        });
+        app.use(vant);
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
